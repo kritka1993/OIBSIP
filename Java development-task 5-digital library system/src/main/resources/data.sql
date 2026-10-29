@@ -56,6 +56,7 @@ VALUES ('Gone Girl', 'Gillian Flynn', '978-0307588371', 'Mystery & Thriller', 3,
 -- SELF-HELP & PSYCHOLOGY
 INSERT INTO books (title, author, isbn, category, total_quantity, available_quantity)
 VALUES ('Thinking, Fast and Slow', 'Daniel Kahneman', '978-0374275631', 'Self-Help & Psychology', 5, 5);
+
 INSERT INTO books (title, author, isbn, category, total_quantity, available_quantity)
 VALUES ('The Alchemist', 'Paulo Coelho', '978-0062315007', 'Fiction / Allegory', 5, 5);
 
