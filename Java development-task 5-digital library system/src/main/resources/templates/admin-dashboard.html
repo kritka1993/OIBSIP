@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Admin Central Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f1f5f9; color: #1e293b; }
+        header { background: #0f172a; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1300px; margin: 2rem auto; padding: 0 1rem; }
+        h2 { margin: 1.5rem 0 1rem 0; color: #0f172a; border-bottom: 2px solid #cbd5e1; padding-bottom: 0.25rem; }
+        .admin-layout { display: grid; grid-template-columns: 1fr 3fr; gap: 2rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
+        th { background: #f8fafc; color: #64748b; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .form-input { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .btn-add { background: #0f172a; color: white; border: none; padding: 0.6rem; width: 100%; border-radius: 4px; font-weight: 600; cursor: pointer; }
+        .btn-danger { color: #ef4444; text-decoration: none; font-weight: 600; }
+        .btn-pay { background: #dcfce7; color: #15803d; padding: 0.25rem 0.5rem; border-radius: 4px; text-decoration: none; font-size: 0.8rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Library Operations Panel (Admin)</h1>
+    <a href="/logout" style="color: #cbd5e1; text-decoration: none; font-weight: 600;">Sign Out</a>
+</header>
+
+<div class="container">
+    <div class="admin-layout">
+        <!-- Left Panel Form Operations -->
+        <div>
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Add New Asset Record</h3>
+                <form th:action="@{/admin/book/add}" th:object="${newBook}" method="post">
+                    <div class="form-group"><label>Book Title</label><input type="text" th:field="*{title}" class="form-input" required /></div>
+                    <div class="form-group"><label>Author Name</label><input type="text" th:field="*{author}" class="form-input" required /></div>
+                    <div class="form-group"><label>ISBN Number</label><input type="text" th:field="*{isbn}" class="form-input" required /></div>
+                    <div class="form-group"><label>Category Variant</label><input type="text" th:field="*{category}" class="form-input" required /></div>
+                    <div class="form-group"><label>Stock Volume Quantity</label><input type="number" th:field="*{totalQuantity}" class="form-input" min="1" required /></div>
+                    <button type="submit" class="btn-add">Add Book</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Panel Data Visualization Systems -->
+        <div>
+            <h2>Catalogue Catalog Records</h2>
+            <table>
+                <thead>
+                <tr><th>Title</th><th>Author</th><th>ISBN</th><th>Category</th><th>Inventory Stock</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.title}" style="font-weight: 500;"></td>
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.isbn}"></td>
+                    <td th:text="${book.category}"></td>
+                    <td th:text="${book.availableQuantity + ' Left / ' + book.totalQuantity + ' Total'}"></td>
+                    <td><a th:href="@{/admin/book/delete/{id}(id=${book.id})}" class="btn-danger" onclick="return confirm('Confirm deletion?')">Delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h2>Active Ledger Transactions & Overdue Fine Management</h2>
+            <table>
+                <thead>
+                <tr><th>Borrower Username</th><th>Book Title</th><th>Issue Date</th><th>Due Deadline</th><th>Fine Cost</th><th>Action Status</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="tx : ${issuedBooks}">
+                    <td th:text="${tx.user.username}"></td>
+                    <td th:text="${tx.book.title}"></td>
+                    <td th:text="${tx.issueDate}"></td>
+                    <td th:text="${tx.dueDate}"></td>
+                    <td th:text="'₹' + ${tx.fineAmount}" style="color: #b91c1c; font-weight: bold;"></td>
+                    <td>
+                        <span th:if="${tx.fineAmount == 0}">In Progress</span>
+                        <a th:if="${tx.fineAmount > 0 and !tx.finePaid}" th:href="@{/admin/fine/pay/{txId}(txId=${tx.id})}" class="btn-pay">Clear unpaid fine</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(issuedBooks)}"><td colspan="6" style="text-align: center; color: #94a3b8;">No current outstanding book ledger loans.</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Registered Membership Base Accounts</h2>
+            <table>
+                <thead>
+                <tr><th>User ID</th><th>Account Profile Name</th><th>Email Context</th><th>System Security Authority Role</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.id}"></td>
+                    <td th:text="${member.username}"></td>
+                    <td th:text="${member.email}"></td>
+                    <td th:text="${member.role}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h2>User Helpdesk Communications</h2>
+            <table>
+                <thead>
+                <tr><th>Sender Name</th><th>Email Context Address</th><th>Message Query Payload</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="q : ${queries}">
+                    <td th:text="${q.name}" style="font-weight: 500;"></td>
+                    <td th:text="${q.email}"></td>
+                    <td th:text="${q.message}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(queries)}"><td colspan="3" style="text-align: center; color: #94a3b8;">Helpdesk system inbox is clean. No queries open.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

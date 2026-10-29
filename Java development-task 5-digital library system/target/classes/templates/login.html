@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Library Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-card { background: white; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: #1e3a8a; margin-bottom: 1.5rem; text-align: center; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #4b5563; font-weight: 500; }
+        input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
+        input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .btn { display: block; width: 100%; padding: 0.75rem; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .alert { padding: 0.75rem; background: #fee2e2; color: #dc2626; border-radius: 6px; margin-bottom: 1rem; font-size: 0.875rem; }
+        .switch-link { text-align: center; margin-top: 1rem; font-size: 0.875rem; color: #4b5563; }
+        .switch-link a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <h2>Digital Library Sign In</h2>
+    <div th:if="${param.error}" class="alert">Invalid username or password.</div>
+    <div th:if="${param.logout}" class="alert" style="background:#d1fae5; color:#065f46;">Logged out successfully.</div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" required autofocus />
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" required />
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <div class="switch-link">
+        Don't have an account? <a href="/register">Register here</a>
+    </div>
+</div>
+</body>
+</html>

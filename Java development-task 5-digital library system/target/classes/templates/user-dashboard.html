@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Member Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f8fafc; color: #334155; }
+        header { background: #1e3a8a; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        h2 { margin-bottom: 1rem; color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+        th, td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; color: #475569; font-weight: 600; }
+        .btn-sm { padding: 0.4rem 0.75rem; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-block; }
+        .btn-issue { background: #ebf5ff; color: #2563eb; }
+        .btn-reserve { background: #fff7ed; color: #ea580c; }
+        .btn-return { background: #ecfdf5; color: #059669; }
+        .logout { color: #f87171; text-decoration: none; font-weight: 600; }
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .form-control { width: 100%; padding: 0.6rem; margin-bottom: 1rem; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .btn-submit { width: 100%; background: #1e3a8a; color: white; border: none; padding: 0.6rem; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Digital Library</h1>
+    <div>
+        <span style="margin-right: 15px;">Welcome, Member</span>
+        <a href="/logout" class="logout">Logout</a>
+    </div>
+</header>
+
+<div class="container">
+    <div th:if="${param.messageSent}" style="background:#d1fae5; color:#065f46; padding:1rem; border-radius:6px; margin-bottom:1.5rem;">
+        Your support request message was recorded successfully!
+    </div>
+
+    <div class="grid">
+        <div>
+            <h2>Available Book Catalogue</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>ISBN</th>
+                    <th>Available</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.title}" style="font-weight: 500;"></td>
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.category}"></td>
+                    <td th:text="${book.isbn}"></td>
+                    <td th:text="${book.availableQuantity + '/' + book.totalQuantity}"></td>
+                    <td>
+                        <a th:if="${book.availableQuantity > 0}" th:href="@{/book/issue/{id}(id=${book.id})}" class="btn-sm btn-issue">Issue Book</a>
+                        <a th:if="${book.availableQuantity <= 0}" th:href="@{/book/reserve/{id}(id=${book.id})}" class="btn-sm btn-reserve">Reserve</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h2>My Currently Issued Books</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tx : ${myIssues}">
+                    <td th:text="${tx.book.title}"></td>
+                    <td th:text="${tx.issueDate}"></td>
+                    <td th:text="${tx.dueDate}" style="color: #dc2626; font-weight: 500;"></td>
+                    <td>
+                        <a th:href="@{/book/return/{txId}(txId=${tx.id})}" class="btn-sm btn-return">Return Book</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(myIssues)}">
+                    <td colspan="4" style="text-align: center; color: #94a3b8;">You currently have no issued books.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <div class="card">
+                <h3>Contact / Query Helpdesk</h3>
+                <p style="font-size: 0.875rem; color: #64748b; margin-bottom: 1rem; margin-top: 0.5rem;">Have questions or registration changes? Drop us an update message.</p>
+                <form th:action="@{/contact}" method="post">
+                    <input type="text" name="name" placeholder="Your Name" class="form-control" required />
+                    <input type="email" name="email" placeholder="Your Email Address" class="form-control" required />
+                    <textarea name="message" rows="4" placeholder="Type your query description here..." class="form-control" required></textarea>
+                    <button type="submit" class="btn-submit">Submit Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
