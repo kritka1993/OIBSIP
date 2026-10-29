@@ -9,8 +9,8 @@ public class DatabaseService {
     private static final String DB_HOST = "localhost";
     private static final String DB_PORT = "3306";
     private static final String DB_NAME = "transport_system";
-    private static final String DB_USER = "root";                  // Default MySQL root username
-    private static final String DB_PASS = "1234";    // <-- Replace with your real MySQL password
+    private static final String DB_USER = "Username";                  // Default MySQL root username
+    private static final String DB_PASS = "Password";    // <-- Replace with your real MySQL password
 
     private static final String DB_URL = "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME + "?useSSL=false&serverTimezone=UTC";
     private Connection connection;
