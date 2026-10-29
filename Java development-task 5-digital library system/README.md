@@ -3,6 +3,33 @@
 A comprehensive web application built with **Spring Boot 4**, **Java 21**, and **Thymeleaf**. This platform serves as a modern digital library system integrating robust database persistence via JPA and role-based security configurations.
 
 ---
+## 📂 Project Structure
+
+The project follows a standard layered architecture under the `com.library` package domain:
+
+```text
+📂 com.library
+ ┣ 📂 config
+ ┃ ┗ 📜 SecurityConfig.java              # System security settings & login interceptors
+ ┣ 📂 controller
+ ┃ ┗ 📜 AppController.java              # Request routers mapping User and Admin endpoints
+ ┣ 📂 model
+ ┃ ┣ 📜 Book.java                       # Catalog record table blueprint
+ ┃ ┣ 📜 Booking.java                    # Advance reservation mappings
+ ┃ ┣ 📜 QueryMessage.java               # Helpdesk feedback entity map
+ ┃ ┣ 📜 Transaction.java                # Core system issue/return ledger
+ ┃ ┗ 📜 User.java                       # Base account profile model mapping
+ ┣ 📂 repository
+ ┃ ┣ 📜 BookRepository.java             # Database CRUD controls for books catalogue
+ ┃ ┣ 📜 BookingRepository.java          # Database query logic for book holdings
+ ┃ ┣ 📜 QueryMessageRepository.java     # Database connector for helpdesk data
+ ┃ ┣ 📜 TransactionRepository.java      # Ledger history record selector interfaces
+ ┃ ┗ 📜 UserRepository.java             # Secure profile data finder interfaces
+ ┣ 📂 service
+ ┃ ┣ 📜 CustomUserDetailsService.java   # BCrypt credential verifiers
+ ┃ ┗ 📜 LibraryService.java             # Core business rules (Fines calculations & issue rules)
+ ┗ 📜 DigitalLibraryApplication.java     # Spring Boot application main entry bootstrapper
+```
 
 ## 🛠️ Tech Stack & Prerequisites
 
