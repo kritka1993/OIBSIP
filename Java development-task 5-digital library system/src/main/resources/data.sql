@@ -1,5 +1,7 @@
 -- 1. Populate Seed Administrative & Member Accounts
 
+--• Admin Username: admin | Password: admin123 (Pre-hashed using BCrypt)
+--• User Username: member | Password: user123 (Pre-hashed using BCrypt)
 INSERT IGNORE INTO users (username, password, email, role)
 VALUES ('admin', '$2a$10$RzVb7/c1p27a1AECb7Hze.9tTspzWdJ0lWwDk5.k3bX3PkWmF7n3.', 'admin@library.com', 'ROLE_ADMIN');
 
